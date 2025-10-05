@@ -1,4 +1,6 @@
 import math
+
+import numpy as np
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from fastapi import Request
@@ -36,47 +38,44 @@ def getMatrix(X,f):
     return A
 
 def cholesky_decomposition(A):
+    if is_lower_triangular(A):
+        return A
+    else:
+        n = len(A)
 
-    n = len(A)
+        L = [[0.0] * n for _ in range(n)]
 
-    L = [[0.0] * n for _ in range(n)]
-
-    for i in range(n):
-        for j in range(i + 1):
-            if i == j:
-                sum_sq = sum(L[i][k]**2 for k in range(j))
-                
-                term = A[i][i] - sum_sq
+        for i in range(n):
+            for j in range(i + 1):
+                if i == j:
+                    sum_sq = sum(L[i][k]**2 for k in range(j))
                     
-                L[i][j] = math.sqrt(term)
-            else:
-                sum_prod = sum(L[i][k] * L[j][k] for k in range(j))
-                L[i][j] = (A[i][j] - sum_prod) / L[j][j]
-                
-    return L
+                    term = A[i][i] - sum_sq
+                        
+                    L[i][j] = math.sqrt(term)
+                else:
+                    sum_prod = sum(L[i][k] * L[j][k] for k in range(j))
+                    L[i][j] = (A[i][j] - sum_prod) / L[j][j]
+                    
+        return L
+
+def is_lower_triangular(A):
+    n = len(A)
+    m = len(A[0])
+    for i in range(n):
+        for j in range(i+1, m):
+            if abs(A[i][j]) > 1e-10:
+                return False
+    return True
 
 def calculateC(X,Y,f):
     A = getMatrix(X,f)
-    print(A)
     At = transpose(A)
-    print(At)
     AtA = MatSzor(At,A)
-    print(AtA)
     AtY = MatSzor(At,[[y] for y in Y])
-    print(AtY)
-    return {"A": A, "At": At, "AtA": AtA, "AtY": AtY}
-
-
-
-
-
-X=[-2,-1,0,1,2]
-Y = [2,2,4,3,1]
-
-f="r+r*x"
-
-calculateC(X,Y,f)
-
+    C = cholesky_decomposition(AtA)
+    eredmeny = np.linalg.solve(np.array(C), np.array(AtY))
+    return {"A": A, "At": At, "AtA": AtA, "AtY": AtY, "C": C, "eredmeny": eredmeny}
 
 
 app = FastAPI()
