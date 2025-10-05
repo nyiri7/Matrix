@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pdb
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+*.log
+
+# VSCode
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environments
+.env
+.venv/
+venv/
+ENV/
+
+# FastAPI
+instance/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# HTML/JS build
+node_modules/
+
+# Misc
+*.bak
+*.swp
+*.swo
+*.tmp
+*.orig
+
+# Test
+htmlcov/
+.coverage
+.tox/
+
+# Windows
+*.db
+*.exe
+*.dll
+*.com
+*.bat
+*.msi
+*.lnk
