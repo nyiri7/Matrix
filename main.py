@@ -1,5 +1,4 @@
 import math
-import numpy as np
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from fastapi import Request
@@ -65,7 +64,7 @@ def calculateC(X,Y,f):
     print(AtA)
     AtY = MatSzor(At,[[y] for y in Y])
     print(AtY)
-    print(cholesky_decomposition(AtA))
+    return {"A": A, "At": At, "AtA": AtA, "AtY": AtY}
 
 
 
@@ -88,3 +87,11 @@ async def root():
     with open("Matrix.html", encoding="utf-8") as f:
         html_content = f.read()
     return HTMLResponse(content=html_content)
+    
+@app.post("/solve")
+async def solve(request: Request):
+    data = await request.json()
+    X = data.get("x", [])
+    Y = data.get("y", [])
+    f = data.get("f", "")
+    return calculateC(X, Y, f)

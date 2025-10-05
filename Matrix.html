@@ -74,6 +74,11 @@
                                 <input type="text" class="form-control matInput y" onchange="main()">
                                 <input type="text" class="form-control matInput y" onchange="main()">
                             </div>
+                            <div class="row mt-2">
+                                <div class="col-md-12">
+                                    <input type="text" id="functionInput" class="form-control" placeholder="Függvény" onchange="main()">
+                                </div>
+                            </div>
                         </div>
                         </div>
                     </div>
@@ -108,12 +113,11 @@
         </div>
         <script>
             function main(){
-            var a = '<div class="matrix">'
-            var atU = ''
-            var atD = ''
-            var xInputs= document.querySelectorAll('.x')
-            var yInputs= document.querySelectorAll('.y')
-            
+            var xInputs= document.querySelectorAll('.x');
+            var yInputs= document.querySelectorAll('.y');
+            var xs=[];
+            var ys=[];
+
             xInputs.forEach(input => {
                     input.value = input.value.replace(/[^0-9\-\.,]/g, '');
             });
@@ -124,17 +128,27 @@
             xInputs.forEach(input => {
                     var yValue = yInputs[Array.from(xInputs).indexOf(input)].value;
                     if(yValue && yValue != '' && input.value && input.value != '') {
-                        a+='1 '+input.value+'<br>';
-                        atU+='1 ';
-                        atD+=yValue+' ';
-                    } else {
-                        a+='';
+                        xs.push(parseFloat(input.value.replace(',', '.')));
+                        ys.push(parseFloat(yValue.replace(',', '.')));
                     }
             });
-            a+='</div>';
-            document.getElementById('a').innerHTML = a;
-            document.getElementById('at').innerHTML = '<div class="matrix">'+atU+'<br>'+atD+'</div>';
-            document.getElementById('at2').innerHTML = '<div style="max-height:1px; margin-left:1px;padding-left:6px;">'+atU+'<br>'+atD+'</div>';
+            req={x: xs, y: ys, f: document.getElementById('functionInput').value};
+            if(xs.length>1 && ys.length>1 && document.getElementById('functionInput').value && document.getElementById('functionInput').value != ''){
+            fetch('/solve', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(req)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });}
             }
         </script>
     </div>
