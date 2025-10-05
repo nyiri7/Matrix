@@ -16,6 +16,14 @@ def MatSzor(A,At):
                 C[i][j]+=A[i][k]*At[k][j]
     return C
 
+def MatSzorA(A,At):
+    n=len(A)
+    m=len(A[0])
+    for i in range(n):
+        for k in range(m):
+            A[i][k] = str(A[i][k])+"*"+"r"+str(k)
+    return A
+
 def transpose(A):
     At=[[A[j][i] for j in range(len(A))] for i in range(len(A[0]))]
     return At
@@ -74,8 +82,13 @@ def calculateC(X,Y,f):
     AtA = MatSzor(At,A)
     AtY = MatSzor(At,[[y] for y in Y])
     C = cholesky_decomposition(AtA)
+    Ak = [["r"+str(i)] for i in range(len(C))]
     eredmeny = np.linalg.solve(np.array(C), np.array(AtY))
-    return {"A": A, "At": At, "AtA": AtA, "AtY": AtY, "C": C, "eredmeny": eredmeny}
+    try:
+        return {"A": A,"Y":Y, "At": At, "AtA": AtA, "AtY": AtY, "C": C, "eredmeny": eredmeny.astype(str).tolist(), "Ak": Ak}
+    except Exception as e:
+        return {"error": str(e)}
+
 
 
 app = FastAPI()

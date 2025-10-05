@@ -29,6 +29,14 @@
             border-right: 1px solid black;
             padding-left: 3px;
             padding-right: 3px;
+            margin-left: 2px;
+        }
+        .matrixH{
+            border-left: 1px solid white;
+            border-right: 1px solid white;
+            padding-left: 3px;
+            padding-right: 3px;
+            margin-left: 2px;
         }
     </style>
 </head>
@@ -58,21 +66,21 @@
                                 <div style="width: 10px; font-weight: bold;  border-right: 2px solid black;">
                                     x
                                 </div>
-                                <input type="text" class="form-control matInput x" onchange="main()">
-                                <input type="text" class="form-control matInput x" onchange="main()">
-                                <input type="text" class="form-control matInput x" onchange="main()">
-                                <input type="text" class="form-control matInput x" onchange="main()">
-                                <input type="text" class="form-control matInput x" onchange="main()">
+                                <input type="text" class="form-control matInput x" onchange="main()" value="-2">
+                                <input type="text" class="form-control matInput x" onchange="main()" value="-1">
+                                <input type="text" class="form-control matInput x" onchange="main()" value="0">
+                                <input type="text" class="form-control matInput x" onchange="main()" value="1">
+                                <input type="text" class="form-control matInput x" onchange="main()" value="2">
                             </div>
                             <div class="row">
                                 <div style="width: 10px; font-weight: bold; border-right: 2px solid black;">
                                     y
                                 </div>
-                                <input type="text" class="form-control matInput y" onchange="main()">
-                                <input type="text" class="form-control matInput y" onchange="main()">
-                                <input type="text" class="form-control matInput y" onchange="main()">
-                                <input type="text" class="form-control matInput y" onchange="main()">
-                                <input type="text" class="form-control matInput y" onchange="main()">
+                                <input type="text" class="form-control matInput y" onchange="main()" value="2">
+                                <input type="text" class="form-control matInput y" onchange="main()" value="2">
+                                <input type="text" class="form-control matInput y" onchange="main()" value="4">
+                                <input type="text" class="form-control matInput y" onchange="main()" value="3">
+                                <input type="text" class="form-control matInput y" onchange="main()" value="1">
                             </div>
                             <div class="row mt-2">
                                 <div class="col-md-12">
@@ -89,66 +97,224 @@
             <div class="col-md-1"></div>
             <div class="col-md-10 card" style="padding: 10px;">
                 <div class="row">
-                <h2>
-                    A és A transzponáltja
-                </h2>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                            <div class="d-flex">
-                                <div id="at2"  style="color: white;"></div>
-                                <div id="a"></div>
-                            </div>
-                            <div class="d-flex mt-2">
-                                <div id="at">
-
+                    <div class="col-md-6">
+                        <div class="row">
+                                <h2>
+                                    A * A <sup>t</sup>
+                                </h2>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="d-flex">
+                                    <div id="at2"  style="color: white;"></div>
+                                    <div id="a"></div>
                                 </div>
-                                <div id="result"></div>
-                            </div>
-                    </div>
+                                <div class="d-flex mt-2">
+                                    <div id="at">
 
+                                    </div>
+                                    <div id="ata"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                                <h2>
+                                    A * A <sup>t</sup>
+                                </h2>
+                        </div>
+                        <div class="row">
+                                <div class="col-md-12">
+                                    <div class="d-flex">
+                                        <div id="at3"  style="color: white;"></div>
+                                        <div id="y"></div>
+                                    </div>
+                                    <div class="d-flex mt-2">
+                                        <div id="at4">
+
+                                        </div>
+                                        <div id="aty">
+
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="row">
+                                <h2>
+                                    C
+                                </h2>
+                        </div>
+                        <div class="row">
+                                <div class="col-md-12">
+                                    <div class="d-flex" style="align-items: center;">
+                                        <div id="c" style="align-items: center;"></div>
+                                        <div id="b" style="align-items: center;"></div>
+                                        =
+                                        <div id="y2" style="align-items: center;"></div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <canvas id="myChart"></canvas>
+                    </div>
                 </div>
 
             </div>
         </div>
         <script>
             function main(){
-            var xInputs= document.querySelectorAll('.x');
-            var yInputs= document.querySelectorAll('.y');
-            var xs=[];
-            var ys=[];
+                var xInputs= document.querySelectorAll('.x');
+                var yInputs= document.querySelectorAll('.y');
+                var xs=[];
+                var ys=[];
 
-            xInputs.forEach(input => {
-                    input.value = input.value.replace(/[^0-9\-\.,]/g, '');
-            });
-            
-            yInputs.forEach(input => {
-                    input.value = input.value.replace(/[^0-9\-\.,]/g, '');
-            });
-            xInputs.forEach(input => {
-                    var yValue = yInputs[Array.from(xInputs).indexOf(input)].value;
-                    if(yValue && yValue != '' && input.value && input.value != '') {
-                        xs.push(parseFloat(input.value.replace(',', '.')));
-                        ys.push(parseFloat(yValue.replace(',', '.')));
-                    }
-            });
-            req={x: xs, y: ys, f: document.getElementById('functionInput').value};
-            if(xs.length>1 && ys.length>1 && document.getElementById('functionInput').value && document.getElementById('functionInput').value != ''){
-            fetch('/solve', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(req)
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
+                xInputs.forEach(input => {
+                        input.value = input.value.replace(/[^0-9\-\.,]/g, '');
+                });
                 
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });}
+                yInputs.forEach(input => {
+                        input.value = input.value.replace(/[^0-9\-\.,]/g, '');
+                });
+                xInputs.forEach(input => {
+                        var yValue = yInputs[Array.from(xInputs).indexOf(input)].value;
+                        if(yValue && yValue != '' && input.value && input.value != '') {
+                            xs.push(parseFloat(input.value.replace(',', '.')));
+                            ys.push(parseFloat(yValue.replace(',', '.')));
+                        }
+                });
+                req={x: xs, y: ys, f: document.getElementById('functionInput').value};
+                if(xs.length>1 && ys.length>1 && document.getElementById('functionInput').value && document.getElementById('functionInput').value != ''){
+                fetch('/solve', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(req)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    function renderMatrix(matrix, title, color, classs) {
+                        let html = '';
+                        if (title) html += `<b>${title}</b><br>`;
+                        html += '<table class="'+classs+'" style="color: '+color+'">';
+                        for (let row of matrix) {
+                            html += '<tr>';
+                            for (let cell of row) {
+                                html += `<td>${cell}</td>`;
+                            }
+                            html += '</tr>';
+                        }
+                        html += '</table>';
+                        return html;
+                    }
+                    function renderMatrix1(matrix, title, color, classs) {
+                        let html = '';
+                        if (title) html += `<b>${title}</b><br>`;
+                        html += '<table class="'+classs+'" style="color: '+color+'">';
+                        for (let row of matrix) {
+                            html += '<tr>';
+                            html += `<td>${row}</td>`;
+                            html += '</tr>';
+                        }
+                        html += '</table>';
+                        return html;
+                    }
+
+                    document.getElementById('a').innerHTML = renderMatrix(data.A, 'A', 'black', 'matrix');
+                    document.getElementById('at').innerHTML = renderMatrix(data.At, 'A<sup>T</sup>', 'black', 'matrix');
+                    document.getElementById('at2').innerHTML = renderMatrix(data.At, 'A<sup>T</sup>A', 'white', 'matrixH');
+                    document.getElementById('ata').innerHTML = renderMatrix(data.AtA, 'A<sup>T</sup>*A', 'black', 'matrix');
+
+                    document.getElementById('at3').innerHTML = renderMatrix(data.At, 'A<sup>T</sup>A', 'white', 'matrixH');
+                    document.getElementById('at4').innerHTML = renderMatrix(data.At, 'A<sup>T</sup>', 'black', 'matrix');
+                    document.getElementById('y').innerHTML = renderMatrix1(data.Y, 'Y', 'black', 'matrix');
+                    document.getElementById('aty').innerHTML = renderMatrix1(data.AtY, 'A<sup>T</sup>*Y', 'black', 'matrix');
+
+                    document.getElementById('c').innerHTML = renderMatrix1(data.C, 'C', 'black', 'matrix');
+                    document.getElementById('y2').innerHTML = renderMatrix1(data.Y, 'Y', 'black', 'matrix');
+                    document.getElementById('b').innerHTML = renderMatrix1(data.Ak, 'R', 'black', 'matrix');
+
+
+
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });}
+                const data = {
+                    datasets: [
+                        // ------------------------------------------------------------------
+                        // 1. DATASET: Az egyedi pontok (Scatter)
+                        // ------------------------------------------------------------------
+                        {
+                            label: 'Egyedi Adatpontok',
+                            data: [
+                                { x: 1, y: 10 },
+                                { x: 2, y: 5 },
+                                { x: 3, y: 15 },
+                                { x: 4, y: 8 },
+                                { x: 5, y: 12 }
+                            ],
+                            backgroundColor: 'rgba(255, 99, 132, 0.8)', // Piros pontok
+                            pointRadius: 6,
+                            showLine: false, // Ne kösse össze a pontokat
+                            order: 2 
+                        },
+
+                        // ------------------------------------------------------------------
+                        // 2. DATASET: Az egyenes vonal (Line)
+                        // ------------------------------------------------------------------
+                        {
+                            label: 'Trendvonal/Egyenes',
+                            type: 'line', // Vonal típus
+                            data: [
+                                { x: 1, y: 7 },
+                                { x: 5, y: 11 }
+                            ],
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 3,
+                            pointRadius: 0,
+                            tension: 0,
+                            order: 1 
+                        }
+                    ]
+                };
+
+                const config = {
+                    type: 'scatter',
+                    data: data,
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
+                                type: 'linear',
+                                position: 'bottom',
+                                title: {
+                                    display: true,
+                                    text: 'X tengely'
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Y tengely'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: true
+                            },
+                            title: {
+                                display: true,
+                                text: 'Pontábra és Különálló Egyenes'
+                            }
+                        }
+                    }
+                };
+                const ctx = document.getElementById('myChart').getContext('2d');
+                new Chart(ctx, config);
             }
         </script>
     </div>
