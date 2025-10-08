@@ -159,6 +159,20 @@
                                     </div>
                                 </div>
                         </div>
+                        <div class="row">
+                                <h2>
+                                    Eredmény:
+                                </h2>
+                        </div>
+                        <div class="row">
+                                <div class="col-md-12">
+                                    <div class="d-flex" style="align-items: center;">
+                                        <div id="e">
+
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
                     </div>
                     <div class="col-md-6">
                         <canvas id="myChart"></canvas>
@@ -238,89 +252,84 @@
                     document.getElementById('aty').innerHTML = renderMatrix1(data.AtY, 'A<sup>T</sup>*Y', 'black', 'matrix');
 
                     document.getElementById('c').innerHTML = renderMatrix1(data.C, 'C', 'black', 'matrix');
-                    document.getElementById('y2').innerHTML = renderMatrix1(data.Y, 'Y', 'black', 'matrix');
+                    document.getElementById('y2').innerHTML = renderMatrix1(data.AtY, "A'Y", 'black', 'matrix');
                     document.getElementById('b').innerHTML = renderMatrix1(data.Ak, 'R', 'black', 'matrix');
+                    document.getElementById('e').innerHTML = data.eredmeny;
 
+                    const adat = {
+                        datasets: [
+                            // ------------------------------------------------------------------
+                            // 1. DATASET: Az egyedi pontok (Scatter)
+                            // ------------------------------------------------------------------
+                            {
+                                label: 'Egyedi Adatpontok',
+                                data: data.p,
+                                backgroundColor: 'rgba(255, 99, 132, 0.8)', // Piros pontok
+                                pointRadius: 6,
+                                showLine: false, // Ne kösse össze a pontokat
+                                order: 2 
+                            },
 
+                            // ------------------------------------------------------------------
+                            // 2. DATASET: Az egyenes vonal (Line)
+                            // ------------------------------------------------------------------
+                            {
+                                label: 'Trendvonal/Egyenes',
+                                type: 'line', // Vonal típus
+                                data: data.line,
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 3,
+                                pointRadius: 0,
+                                tension: 0,
+                                order: 1 
+                            }
+                        ]
+                    };
+
+                    const config = {
+                        type: 'scatter',
+                        data: adat,
+                        options: {
+                            responsive: true,
+                            scales: {
+                                x: {
+                                    type: 'linear',
+                                    position: 'bottom',
+                                    title: {
+                                        display: true,
+                                        text: 'X tengely'
+                                    }
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Y tengely'
+                                    }
+                                }
+                            },
+                            plugins: {
+                                legend: {
+                                    display: true
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Pontábra és Különálló Egyenes'
+                                }
+                            }
+                        }
+                    };
+                    if (window.myChartInstance) {
+                        window.myChartInstance.destroy();
+                    }
+                    const ctx = document.getElementById('myChart').getContext('2d');
+                    window.myChartInstance = new Chart(ctx, config);
 
                 })
                 .catch((error) => {
                     console.error('Error:', error);
                 });}
-                const data = {
-                    datasets: [
-                        // ------------------------------------------------------------------
-                        // 1. DATASET: Az egyedi pontok (Scatter)
-                        // ------------------------------------------------------------------
-                        {
-                            label: 'Egyedi Adatpontok',
-                            data: [
-                                { x: 1, y: 10 },
-                                { x: 2, y: 5 },
-                                { x: 3, y: 15 },
-                                { x: 4, y: 8 },
-                                { x: 5, y: 12 }
-                            ],
-                            backgroundColor: 'rgba(255, 99, 132, 0.8)', // Piros pontok
-                            pointRadius: 6,
-                            showLine: false, // Ne kösse össze a pontokat
-                            order: 2 
-                        },
 
-                        // ------------------------------------------------------------------
-                        // 2. DATASET: Az egyenes vonal (Line)
-                        // ------------------------------------------------------------------
-                        {
-                            label: 'Trendvonal/Egyenes',
-                            type: 'line', // Vonal típus
-                            data: [
-                                { x: 1, y: 7 },
-                                { x: 5, y: 11 }
-                            ],
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 3,
-                            pointRadius: 0,
-                            tension: 0,
-                            order: 1 
-                        }
-                    ]
-                };
-
-                const config = {
-                    type: 'scatter',
-                    data: data,
-                    options: {
-                        responsive: true,
-                        scales: {
-                            x: {
-                                type: 'linear',
-                                position: 'bottom',
-                                title: {
-                                    display: true,
-                                    text: 'X tengely'
-                                }
-                            },
-                            y: {
-                                beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: 'Y tengely'
-                                }
-                            }
-                        },
-                        plugins: {
-                            legend: {
-                                display: true
-                            },
-                            title: {
-                                display: true,
-                                text: 'Pontábra és Különálló Egyenes'
-                            }
-                        }
-                    }
-                };
-                const ctx = document.getElementById('myChart').getContext('2d');
-                new Chart(ctx, config);
             }
 
             function addInput() {

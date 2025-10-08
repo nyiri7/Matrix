@@ -13,7 +13,7 @@ def MatSzor(A,At):
     for i in range(n):
         for j in range(p):
             for k in range(m):
-                C[i][j]+=A[i][k]*At[k][j]
+                C[i][j]+=round(A[i][k]*At[k][j],4)
     return C
 
 def MatSzorA(A,At):
@@ -64,21 +64,56 @@ def is_lower_triangular(A):
 
 def s(ATY,A):
     result=[]
-    for i in range(len(ATY)):
-        if i==0:
-            result.append(ATY[0][0]/A[0][0])
-        else:
-            sum=ATY[i][0]
-            for j in range(len(ATY[0])):
-                if j<len(result):
-                    sum=sum-A[i][j]*result[j]
-                else:
-                    if A[i][j]!=0:
-                        sum=sum/A[i][j]
-            result.append(sum)
+    if is_lower_triangular(A):
+        for i in range(len(ATY)):
+            if i==0:
+                result.append(round(ATY[0][0]/A[0][0],4))
+            else:
+                sum=ATY[i][0]
+                for j in range(len(A[i])):
+                    if j<len(result):
+                        sum=sum-A[i][j]*result[j]
+                    else:
+                        if A[i][j]!=0:
+                            sum=sum/A[i][j]
+                result.append(round(sum,4))
+    else:
+        for i in range(len(ATY)):
+            if i==0:
+                result.append(round(ATY[len(ATY)-1][0]/A[len(ATY)-i-1][len(A[0])-1],4))
+            else:
+                sum=ATY[len(ATY)-1-i][0]
+                for j in range(len(A[i])):
+                    if j<len(result):
+                        sum=sum-A[len(ATY)-1-i][len(A[0])-1-j]*result[j]
+                    else:
+                        if A[len(ATY)-1-i][len(A[0])-1-j]!=0:
+                            sum=sum/A[len(ATY)-1-i][len(A[0])-1-j]
+                result.append(round(sum,4))
     return result
 
-                
+def egy(X,f):
+    minX = min(X)
+    maxX = max(X)
+    result=[]
+    i=minX-1
+    while i<maxX+1:
+        result.append({"x": i, "y": getXValue(f, i)})
+        i+=0.1
+    return result
+
+        
+def getBackF(f,eredmeny):
+    index=len(eredmeny)-1
+    result = ""
+    for i in range(len(f)):
+        if f[i]=="r":
+            result+=str(eredmeny[index])
+            index-=1
+        else:
+            result+=f[i]
+    return result
+
 
 def calculateC(X,Y,f):
     A = getMatrix(X,f)
@@ -87,9 +122,13 @@ def calculateC(X,Y,f):
     AtY = MatSzor(At,[[y] for y in Y])
     C = cholesky_decomposition(AtA)
     Ak = [["r"+str(i)] for i in range(len(C))]
-    eredmeny = s(AtY,C)
+    e=[[i] for i in s(AtY,C)]
+    eredmeny = s(e,transpose(C))
+    points = [{"x": X[i], "y": Y[i]} for i in range(len(X))]
+    fBack = getBackF(f, eredmeny)
+    egyenes = egy(X, fBack)
     try:
-        return {"A": A,"Y":Y, "At": At, "AtA": AtA, "AtY": AtY, "C": C, "eredmeny": eredmeny, "Ak": Ak}
+        return {"A": A,"Y":Y, "At": At, "AtA": AtA, "AtY": AtY, "C": C, "eredmeny": fBack, "Ak": Ak, "p": points, "line": egyenes, "e": e,"Ct":transpose(C)}
     except Exception as e:
         return {"error": str(e)}
 
