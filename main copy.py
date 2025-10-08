@@ -69,7 +69,7 @@ def calculateC(X,Y,f):
     AtY = MatSzor(At,[[y] for y in Y])
     C = cholesky_decomposition(AtA)
     Ak = [["r"+str(i)] for i in range(len(C))]
-    eredmeny = np.linalg.solve(np.array(C), np.array(AtY))
+    eredmeny, *_ = np.linalg.lstsq(np.array(C), np.array(AtY), rcond=None)
     try:
         return {"A": A,"Y":Y, "At": At, "AtA": AtA, "AtY": AtY, "C": C, "eredmeny": eredmeny.astype(str).tolist(), "Ak": Ak}
     except Exception as e:

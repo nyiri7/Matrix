@@ -87,6 +87,11 @@
                                     <input type="text" id="functionInput" class="form-control" placeholder="Függvény" onchange="main()">
                                 </div>
                             </div>
+                            <div class="row mt-2">
+                                <div class="col-md-12">
+                                    <button class="btn btn-light" onclick="addInput()">+ Add X/Y</button>
+                                </div>
+                            </div>
                         </div>
                         </div>
                     </div>
@@ -315,6 +320,28 @@
                 };
                 const ctx = document.getElementById('myChart').getContext('2d');
                 new Chart(ctx, config);
+            }
+
+            function addInput() {
+                // Új sor létrehozása
+                const newRowX = document.createElement('div');
+                newRowX.classList.add('row');
+                newRowX.innerHTML = `
+                    <div style="width: 10px; font-weight: bold; border-right: 2px solid black;"></div>
+                    <input type="text" class="form-control matInput x" onchange="main()" value="0">
+                `;
+
+                const newRowY = document.createElement('div');
+                newRowY.classList.add('row');
+                newRowY.innerHTML = `
+                    <div style="width: 10px; font-weight: bold; border-right: 2px solid black;"></div>
+                    <input type="text" class="form-control matInput y" onchange="main()" value="0">
+                `;
+
+                // Új sor beszúrása a meglévő sorok elé
+                const alapadatokDiv = document.querySelector('.accordion-body');
+                alapadatokDiv.insertBefore(newRowY, alapadatokDiv.lastElementChild.previousElementSibling);
+                alapadatokDiv.insertBefore(newRowX, alapadatokDiv.lastElementChild.previousElementSibling);
             }
         </script>
     </div>
