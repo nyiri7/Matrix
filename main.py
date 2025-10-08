@@ -62,6 +62,24 @@ def is_lower_triangular(A):
                 return False
     return True
 
+def s(ATY,A):
+    result=[]
+    for i in range(len(ATY)):
+        if i==0:
+            result.append(ATY[0][0]/A[0][0])
+        else:
+            sum=ATY[i][0]
+            for j in range(len(ATY[0])):
+                if j<len(result):
+                    sum=sum-A[i][j]*result[j]
+                else:
+                    if A[i][j]!=0:
+                        sum=sum/A[i][j]
+            result.append(sum)
+    return result
+
+                
+
 def calculateC(X,Y,f):
     A = getMatrix(X,f)
     At = transpose(A)
@@ -69,9 +87,9 @@ def calculateC(X,Y,f):
     AtY = MatSzor(At,[[y] for y in Y])
     C = cholesky_decomposition(AtA)
     Ak = [["r"+str(i)] for i in range(len(C))]
-    eredmeny = np.linalg.solve(np.array(C), np.array(AtY))
+    eredmeny = s(AtY,C)
     try:
-        return {"A": A,"Y":Y, "At": At, "AtA": AtA, "AtY": AtY, "C": C, "eredmeny": eredmeny.astype(str).tolist(), "Ak": Ak}
+        return {"A": A,"Y":Y, "At": At, "AtA": AtA, "AtY": AtY, "C": C, "eredmeny": eredmeny, "Ak": Ak}
     except Exception as e:
         return {"error": str(e)}
 
