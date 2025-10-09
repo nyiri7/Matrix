@@ -62,6 +62,15 @@ def is_lower_triangular(A):
                 return False
     return True
 
+def is_upper_triangular(A):
+    n = len(A)
+    m = len(A[0])
+    for i in range(n):
+        for j in range(i):
+            if abs(A[i][j]) > 1e-10:
+                return False
+    return True
+
 def s(ATY,A):
     result=[]
     if is_lower_triangular(A):
@@ -120,9 +129,26 @@ def calculateC(X,Y,f):
     At = transpose(A)
     AtA = MatSzor(At,A)
     AtY = MatSzor(At,[[y] for y in Y])
-    C = cholesky_decomposition(AtA)
-    Ak = [["r"+str(i)] for i in range(len(C))]
+    if is_upper_triangular(AtA) and is_lower_triangular(AtA):
+        e=AtY
+        C = AtA
+        Ak = [["r"+str(i)] for i in range(len(C))]
+        eredmeny = list(reversed(s(e,C)))
+        points = [{"x": X[i], "y": Y[i]} for i in range(len(X))]
+        fBack = getBackF(f, eredmeny)
+        egyenes = egy(X, fBack)
+        try:
+            return {"A": A,"Y":Y, "At": At, "AtA": AtA, "AtY": AtY, "C": C, "eredmeny": fBack, "Ak": Ak, "p": points, "line": egyenes, "e": e,"Ct":C}
+        except Exception as e:
+            return {"error": str(e)}
+    if not is_upper_triangular(AtA) and not is_lower_triangular(AtA):
+        C = cholesky_decomposition(AtA)
+    if is_upper_triangular(AtA) and not is_lower_triangular(AtA):
+        C = transpose(AtA)
+    if is_lower_triangular(AtA) and not is_upper_triangular(AtA):
+        C = AtA
     e=[[i] for i in s(AtY,C)]
+    Ak = [["r"+str(i)] for i in range(len(C))]
     eredmeny = s(e,transpose(C))
     points = [{"x": X[i], "y": Y[i]} for i in range(len(X))]
     fBack = getBackF(f, eredmeny)

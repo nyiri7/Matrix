@@ -106,7 +106,7 @@
                     <div class="col-md-6">
                         <div class="row">
                                 <h2>
-                                    A * A <sup>t</sup>
+                                    A<sup>t</sup> * A
                                 </h2>
                         </div>
                         <div class="row">
@@ -125,7 +125,7 @@
                         </div>
                         <div class="row">
                                 <h2>
-                                    A * A <sup>t</sup>
+                                    A<sup>t</sup> * Y
                                 </h2>
                         </div>
                         <div class="row">
@@ -153,9 +153,30 @@
                                 <div class="col-md-12">
                                     <div class="d-flex" style="align-items: center;">
                                         <div id="c" style="align-items: center;"></div>
-                                        <div id="b" style="align-items: center;"></div>
-                                        =
-                                        <div id="y2" style="align-items: center;"></div>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="row">
+                                <h2>
+                                    C<sup>t</sup>
+                                </h2>
+                        </div>
+                        <div class="row">
+                                <div class="col-md-12">
+                                    <div class="d-flex" style="align-items: center;">
+                                        <div id="ct" style="align-items: center;"></div>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="row">
+                                <h2>
+                                    e
+                                </h2>
+                        </div>
+                        <div class="row">
+                                <div class="col-md-12">
+                                    <div class="d-flex" style="align-items: center;">
+                                        <div id="e" style="align-items: center;"></div>
                                     </div>
                                 </div>
                         </div>
@@ -167,7 +188,7 @@
                         <div class="row">
                                 <div class="col-md-12">
                                     <div class="d-flex" style="align-items: center;">
-                                        <div id="e">
+                                        <div id="eredmeny">
 
                                         </div>
                                     </div>
@@ -251,10 +272,10 @@
                     document.getElementById('y').innerHTML = renderMatrix1(data.Y, 'Y', 'black', 'matrix');
                     document.getElementById('aty').innerHTML = renderMatrix1(data.AtY, 'A<sup>T</sup>*Y', 'black', 'matrix');
 
-                    document.getElementById('c').innerHTML = renderMatrix1(data.C, 'C', 'black', 'matrix');
-                    document.getElementById('y2').innerHTML = renderMatrix1(data.AtY, "A'Y", 'black', 'matrix');
-                    document.getElementById('b').innerHTML = renderMatrix1(data.Ak, 'R', 'black', 'matrix');
-                    document.getElementById('e').innerHTML = data.eredmeny;
+                    document.getElementById('c').innerHTML = renderMatrix1(data.C, '', 'black', 'matrix');
+                    document.getElementById('ct').innerHTML = renderMatrix1(data.Ct, "", 'black', 'matrix');
+                    document.getElementById('e').innerHTML = renderMatrix1(data.e, '', 'black', 'matrix');
+                    document.getElementById('eredmeny').innerHTML = data.eredmeny;
 
                     const adat = {
                         datasets: [
